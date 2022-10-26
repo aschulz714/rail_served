@@ -235,14 +235,19 @@
 			
 		//});
 
-		
-		
+		var southwest = L.latLng(44.492936,-126.902809);
+		var northeast = L.latLng(49.731316,-113.396868);
+
+		var maxBoundsArea = L.latLngBounds(southwest,northeast);
 		
 		const options = {
 			zoomSnap: .1,
 			//center: [40, -90],
 			//zoom: 4
 			zoomControl: false,
+			//dragging: false,
+			minZoom: 7.5,
+			maxBounds: maxBoundsArea,
 			layers: [wmsLayer,cardo, world_imagery]
 		}
 
@@ -559,7 +564,7 @@
 			}).addTo(map);
 
 			map.fitBounds(dataLayer.getBounds(), {
-				padding: [12, 12]
+				padding: [12, 12],
 			});
 			//addUi(dataLayer);
 			updateMap(dataLayer);
