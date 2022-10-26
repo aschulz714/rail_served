@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset=utf-8 />
+	<title>WA Rail Served Properties</title>
+	<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+	
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+		integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+	<!-- Leaflet CSS -->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin="" />
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">"
+
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			font-family: 'Quicksand', sans-serif;
+			font-size: 100%;
+			color: #3d3d3d;
+		}
+
+		h1 {
+			position: absolute;
+			margin-top: 0;
+			top: 10px;
+			left: 15px;
+			font-size: 1.5em;
+			font-family: 'Quicksand', sans-serif;
+			font-weight: 700;
+			letter-spacing: .04em;
+			padding: 10px 15px;
+			/* Add styles to match Leaflet UI elements */
+			background: rgba(256, 256, 256, .8);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			z-index: 800;
+		}
+
+		h2 {
+			font-family: 'Quicksand', sans-serif;
+			font-size: 1.2em;
+			letter-spacing: .04em;
+
+		}
+
+		#map {
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			width: 100%;
+		}
+
+		#about {
+			position: absolute;
+			bottom: 20px;
+			left: 15px;
+			width: 280px;
+			padding: 0 15px;
+			/* Add styles to match Leaflet UI elements */
+			background: rgba(256, 256, 256, .8);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+			border: 1px solid #ddd;
+			border-radius: 5px;
+			z-index: 800;
+		}
+
+		p {
+			font-size: .9em;
+			line-height: 1.5em;
+		}
+
+		a {
+			color: #005daa;
+			text-decoration: none;
+		}
+
+		a:hover {
+			text-decoration: underline;
+		}
+
+		/* Leaflet popup styles */
+		.leaflet-popup-content {
+			font-family: 'Quicksand', sans-serif;
+			font-size: 1.1em;
+		}
+
+		/* 
+		When browser is 900px high or less
+		make the font a little smaller.
+		 */
+		@media screen and (max-height: 400px) {
+
+			#about p,
+			#about h2 {
+				font-size: .6em;
+			}
+
+			h1 {
+				font-size: 1.2em;
+			}
+
+			#about h2 {
+				font-size: 1em;
+			}
+
+			.leaflet-popup-content {
+				font-family: 'Quicksand', sans-serif;
+				font-size: 0.9em;
+			}
+		}
+
+		/* Don't display info block when window is very small */
+		@media screen and (max-height: 200px) {
+
+			#about {
+				display: none;
+			}
+		}
+	</style>
+</head>
+
+<body>
+
+	<h1>WA Rail Served Properties</h1>
+
+	<div id='map'></div>
+
+	
+	<section id="about">
+		<h2>About this</h2>
+		<p>Additional information about <a href="#">the data</a> and map goes here </p>
+		<p>Map authored by me, Alex Schulz</p>
+	</section>
+
+		<!-- legend is outside of container-fluid and will be dynamically added to map -->
+		<div class="bg-secondary py-3 px-4 ml-4 mt-4 text-white" id="legend">Legend</div>
+
+		<!-- ui is outside of container-fluid and will be dynamically added to map -->
+		<div class="form-group mr-3 mt-3" id="dropdown-ui">
+			<select class="form-control bg-secondary text-white">
+				<option value="ALL PROPERTIES" selected>ALL PROPERTIES</option>
+				<option value="FOOD AND KINDRED PRODUCTS">FOOD AND KINDRED PRODUCTS</option>
+				<option value="LUMBER AND WOOD PRODUCTS">LUMBER AND WOOD PRODUCTS</option>
+				<option value="PAPER AND ALLIED PRODUCTS">PAPER AND ALLIED PRODUCTS</option>
+				<option value="CHEMICALS">CHEMICALS</option>
+				<option value="PETROLEUM REFINING AND RELATED INDUSTRIES">PETROLEUM REFINING AND RELATED INDUSTRIES</option>
+				<option value="RUBBER AND MISC PLASTIC PRODUCTS">RUBBER AND MISC PLASTIC PRODUCTS</option>
+				<option value="STONE, CLAY AND GLASS PRODUCTS">STONE, CLAY AND GLASS PRODUCTS</option>
+				<option value="PRIMARY METAL INDUSTRIES">PRIMARY METAL INDUSTRIES</option>
+				<option value="FABRICATED METAL PRODUCTS">FABRICATED METAL PRODUCTS</option>
+				<option value="MISCELLANEOUS MANUFACTURING">MISCELLANEOUS MANUFACTURING</option>
+				<option value="MOTOR VEHICLE TRANSPORTATION">MOTOR VEHICLE TRANSPORTATION</option>
+				<option value="AIRCRAFT MANUFACTURING">AIRCRAFT MANUFACTURING</option>
+				<option value="MARINE TERMINALS">MARINE TERMINALS</option>
+				<option value="UTILITIES">UTILITIES</option>
+				<option value="WASTE DISPOSAL">WASTE DISPOSAL</option>
+				<option value="WHOLESALE TRADE">WHOLESALE TRADE</option>
+				<option value="BUSINESS SERVICES">BUSINESS SERVICES</option>
+				<option value="GOVERNMENTAL SERVICES">GOVERNMENTAL SERVICES</option>
+				<option value="AGRICULTURE RELATED ACTIVITIES">AGRICULTURE RELATED ACTIVITIES</option>
+				<option value="UNDEVELOPED LAND">UNDEVELOPED LAND</option>
+	
+			</select>
+		</div>
+
+	<!-- jQuery first and the minified version from jQuery site, not the slim minified version from Bootstrap's site. -->
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+		integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<!-- then Popper JS -->
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous">
+	</script>
+	<!-- then Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+		integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous">
+	</script>
+	<!-- then Leaflet JS -->
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+	<script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js"
+    integrity="sha512-E0DKVahIg0p1UHR2Kf9NX7x7TUewJb30mxkxEm2qOYTVJObgsAGpEol9F6iK6oefCbkJiA4/i6fnTHzM6H1kEA=="
+    crossorigin=""></script>
+	
+	<script>
+		
+
+		// request a basemap tile layer and add to the map
+		var cardo = L.tileLayer(
+			'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+				subdomains: 'abcd',
+				maxZoom: 20
+			});
+		var world_imagery = L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+				attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+				subdomains: 'abcd',
+				maxZoom: 16
+			});
+
+		var wmsLayer = L.tileLayer.wms(
+			'http://ows.mundialis.de/services/service?', {
+				layers: 'TOPO-WMS'
+			});
+		
+		var crop = L.tileLayer.wms('https://nassgeodata.gmu.edu/CropScapeService/wms_cdl_wa.cgi', {
+			layers: 'cdl_2021_wa'
+		}
+			
+		);
+
+		// var nexrad = L.tileLayer.wms("http://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r.cgi", {
+    	// 	layers: 'nexrad-n0r-900913',
+    	// 	format: 'image/png',
+    	// 	transparent: true,
+    	// 	attribution: "Weather data © 2012 IEM Nexrad"
+		// });
+
+		//var ESRI = L.esri.tiledMapLayer({
+    	//	url: 'https://services.arcgisonline.com/ArcGIS/rest/services/USA_Topo_Maps/MapServer'
+  		//});
+		
+				
+		var stadia = L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png', {
+			attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+			
+		});
+
+		
+		
+		
+		const options = {
+			zoomSnap: .1,
+			//center: [40, -90],
+			//zoom: 4
+			zoomControl: false,
+			layers: [cardo, world_imagery, wmsLayer, stadia]
+		}
+
+
+
+		// create Leaflet map and apply options
+		const map = L.map('map', options);
+
+		new L.control.zoom({
+			position: 'bottomright'
+		}).addTo(map);
+
+		var baseMaps = {
+			"Satellite": world_imagery,
+			"Basic": cardo,
+			"Hillshade": wmsLayer,
+			"Dark": stadia
+
+		};
+
+		L.control.scale({
+			position: "bottomright",
+			maxWidth: 400,
+			metric: false
+
+		}).addTo(map);
+
+		
+
+		// set global variables for map layer,
+		// mapped attribute, and normalizing attribute
+		let attributeValue = "CHEMICALS";
+		//const normValue = "Petroleum";
+
+		// create object to hold legend titles
+		const labels = {
+			"LUMBER AND WOOD PRODUCTS": "Lumber"
+	
+		}
+
+		
+		// fetch("Data/rail_serve_final.geojson")
+		// 	.then(function(response) {
+		// 		console.log(response)
+		// 		return response.json();
+			
+		// })
+		
+		// .then(function(data) {
+		// 	L.geoJSON(data).addTo(map);
+		
+		// });
+		
+		
+		var outline = $.getJSON("Data/wa_outline.geojson", function (outline) {
+			// jQuery method uses AJAX request for the GeoJSON data
+			drawMapThree(outline);
+		});
+
+		//var rail = $.getJSON("Data/wa_rail.geojson", function (rail) {
+			// jQuery method uses AJAX request for the GeoJSON data
+			//drawMapTwo(rail);
+		//});
+
+		var railLayer = L.geoJson(null, {
+			pointToLayer: function(feature,latlng) {
+				return L.marker(latlng) 
+				},
+				style: function (feature) {
+					return {
+						color: 'red',
+						fillColor: 'red',
+						weight: 2,
+						dashArray: "5, 5"
+					};
+				},
+
+			onEachFeature: function (feature, layer) {
+				const props = feature.properties["RROWNER1"];
+
+				let popupInfo = `<b>Rail Owner: ${props}</b><br>`;
+						
+				layer.bindPopup(popupInfo, {
+					sticky: true
+				});
+			}
+		});
+
+		$.getJSON("Data/wa_rail.geojson", function (data) {
+			railLayer.addData(data).addTo(map);
+		});
+
+		railLayer.on('mouseover',function(e){
+			e.target.setStyle({
+			color:'yellow'
+		});
+		});
+
+		railLayer.on('mouseout',function(e){
+			e.target.resetStyle()
+		});
+
+
+
+		var data = $.getJSON("Data/rail_serve_final.geojson", function (data) {
+			// jQuery method uses AJAX request for the GeoJSON data
+			//console.log(data.feature.properties["ICON"])
+			drawMap(data);
+		});
+
+
+		var overlays = {
+			"Tracks": railLayer,
+
+		};
+
+		L.control.layers(baseMaps, overlays, {
+			position: 'bottomright',
+			collapsed: false,
+			sortLayers: world_imagery,
+			cardo,
+			sortFunction: function (cardo, world_imagery) {
+				return [cardo, world_imagery].sort();
+			}
+		}).addTo(map);
+
+		var commonStyles = {
+			color: 'black',
+			fillColor: 'green',
+			weight: 1,
+			stroke: 1,
+			fillOpacity: 1,
+			radius:8
+		}
+
+
+		var rail_data;
+
+		//Initial setup with layer for all properties and circle markers
+		rail_data = L.geoJSON(null, {
+
+			pointToLayer: function(feature, latlng) {
+
+				//var newIcon = L.icon({
+				//		iconUrl: feature.properties["ICON"],
+				//		iconSize: [40,40]
+				//	})
+					
+					return L.circleMarker(latlng, commonStyles)
+				},
+
+			onEachFeature: function (feature, layer) {
+				const props = feature.properties; //variable to shorten need to type out layer.feature.properties every freakin time
+							
+				
+							let num = props["PARVAL"] * 1
+							let value = num.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 0})
+			
+							let popupInfo = `<b>Owner: ${props["OWNER"]}</b><br>
+							Address: ${props["ADDRESS"]}, ${props["CITY"]}, ${props["ZIP"]}<br>
+							County: ${props["COUNTY_NM"]}<br>
+							Value: ${value}<br>
+							Parcel #: ${props["PARCEL_ID"]}<br>
+							<b><a target="_blank" rel="noopener noreferrer" href='${props["DATA_LINK"]}'>Link to Assesor</a></b>`;
+
+
+						layer.bindPopup(popupInfo, {
+							sticky: true
+						});
+		
+			},
+		});
+
+		$.getJSON("Data/rail_serve_final.geojson", function (data) {
+				rail_data.addData(data)
+		});
+	  
+		///END Initial Setup
+
+			//using a layer group to add/remove data from the map
+			var myData =L.layerGroup([]);
+				myData.addLayer(rail_data);
+				myData.addTo(map);
+
+
+
+			// create the slider control
+			var selectControl = L.control({
+				position: "topright"
+			});
+
+			// when control is added
+			selectControl.onAdd = function () {
+				// get the element with id attribute of ui-controls
+				return L.DomUtil.get("dropdown-ui");
+			};
+
+			// add the control to the map
+			selectControl.addTo(map);
+
+			$('#dropdown-ui select').change(function () {
+				// code executed here when change event occurs
+		 		attributeValue = this.value;
+		 		//console.log(attributeValue)
+
+				map.removeLayer(myData)
+				myData.clearLayers();
+
+				rail_data = L.geoJson(null, {
+
+					pointToLayer: function(feature, latlng) {
+
+						var newIcon = L.icon({
+							iconUrl: feature.properties["ICON"],
+							iconSize: [40,40]
+						})
+
+						return L.marker(latlng, {icon:newIcon}) 
+							
+						},
+						onEachFeature: function(feature, layer) {
+							const props = feature.properties; //variable to shorten need to type out layer.feature.properties every freakin time
+							
+								let num = props["PARVAL"] * 1
+								let value = num.toLocaleString("en-US", {style: "currency", currency: "USD", minimumFractionDigits: 0})
+				
+								let popupInfo = `<b>Owner: ${props["OWNER"]}</b><br>
+								Address: ${props["ADDRESS"]}, ${props["CITY"]}, ${props["ZIP"]}<br>
+								County: ${props["COUNTY_NM"]}<br>
+								Value: ${value}<br>
+								Parcel #: ${props["PARCEL_ID"]}<br>
+								<b><a target="_blank" rel="noopener noreferrer" href='${props["DATA_LINK"]}'>Link to Assesor</a></b>`;
+
+
+								layer.bindPopup(popupInfo, {
+									sticky: true
+								});
+							
+						},
+						filter: function(feature, layer) {
+							if (attributeValue == "ALL PROPERTIES"){
+								return feature;
+								
+				  
+							}
+							else {
+								return (feature.properties["USEDESC"] == attributeValue);
+							}
+						},
+		 		});
+
+				$.getJSON("Data/rail_serve_final.geojson", function(data) {
+					rail_data.addData(data)
+				});
+		
+				myData.addLayer(rail_data);
+				myData.addTo(map);
+
+				//rail_data.on('click',function(e){
+				//map.setView(e.latlng, 16);
+			});
+			//});
+
+			//rail_data.on('click',function(e){
+			//map.setView(e.latlng, 16);
+		//});
+
+		function drawMap(data) {
+			const dataLayer = L.geoJSON(data, {
+				pointToLayer: function (feature, latlng) {
+					var newIcon = L.icon({
+						iconUrl: feature.properties["ICON"],
+						iconSize: [20,20]
+					})
+				
+					//console.log(feature.properties["USEDESC"]);
+					return L.marker(latlng, {icon:newIcon})
+				},
+
+				//filter: function(feature, layer) {
+				//	console.log(attributeValue)
+				//	if(feature.properties["USEDESC"] === attributeValue){
+				//	return feature;
+		//	}
+
+		//}
+				
+				//  style: function (feature) {
+				//  	return {
+				//  		color: 'black',
+				//  		fillColor: my_color(feature.properties.USECODE),
+				//  		fillOpacity: 0.7,
+			 	// 		radius: 4
+				//  	};
+				//  },
+				// onEachFeature: function (feature, layer) {
+				// 	layer.on('mouseover', function () {
+				// 		layer.setStyle({
+				// 			color: '#ff6e00'
+				// 		}).bringToFront();
+				// 	});
+
+				// 	layer.on('mouseout', function () {
+
+				// 		layer.setStyle({
+				// 			color: '#20282e'
+				// 		});
+				// 	});
+
+				// }
+
+				
+
+			}).addTo(map);
+
+			map.fitBounds(dataLayer.getBounds(), {
+				padding: [12, 12]
+			});
+			//addUi(dataLayer);
+			updateMap(dataLayer);
+			//addLegend(dataLayer);
+			
+		}
+
+
+		function drawMapThree(outline) {
+			const dataLayer = L.geoJSON(outline, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng)
+				},
+				style: function (feature) {
+					return {
+						color: 'black',
+						fill: false,
+						weight: 3
+					};
+				},
+
+			}).addTo(map);
+
+		}
+		function drawMapTwo(rail) {
+			const railLayer = L.geoJSON(rail, {
+				pointToLayer: function (feature, latlng) {
+					return L.marker(latlng)
+				},
+				style: function (feature) {
+					return {
+						color: 'red',
+						fillColor: 'red',
+						weight: 1,
+						dashArray: "5, 5"
+					};
+				},
+
+			}).addTo(map);
+
+		}
+
+
+		
+		
+		
+		function updateMap(dataLayer) {
+
+			map.removeLayer(dataLayer)
+
+			dataLayer.eachLayer(function (layer) {
+				
+				const props = layer.feature.properties["USEDESC"]; //variable to shorten need to type out layer.feature.properties every freakin time
+				//console.log(props)
+				
+				let popupInfo = `<b>Owner: ${props["OWNER"]}</b><br>
+				Address: ${props["ADDRESS"]}, ${props["CITY"]}, ${props["ZIP"]}<br>
+				County: ${props["COUNTY_NM"]}<br>
+				Acres: ${props["ACRES"]}<br>
+				Value: $${props["PARVAL"]}<br>
+				Parcel #: ${props["PARCEL_ID"]}<br>
+				<b><a target="_blank" rel="noopener noreferrer" href='${props["DATA_LINK"]}'>Link to Assesor</a></b>`;
+
+
+				layer.bindPopup(popupInfo, {
+					sticky: true
+				});
+			 })
+
+			//updateLegend()
+
+		}
+
+		
+			const legendControl = L.control({
+				position: 'topright'
+			});
+
+			legendControl.onAdd = function () {
+				const legend = L.DomUtil.get('legend');
+
+				L.DomEvent.disableScrollPropagation(legend);
+				L.DomEvent.disableScrollPropagation(legend);
+
+				return legend;
+			};
+
+			legendControl.addTo(map);
+
+
+		
+
+
+
+		// function updateLegend(attributeValue) {
+		// 	console.log(attributeValue)
+		// 	const legend = $('#legend').html(`<h5>${labels[attributeValue]}</h5>`);
+			
+
+		// 	for (let i = 0; i <= breaks.length - 1; i++) {
+
+		// 		let color = getColor(breaks[i][0], breaks);
+
+		// 		legend.append(
+		// 			`<span style="background:${color}"></span>
+		// 			<div>
+		// 				<label>$${(breaks[i][0]).toFixed(1)}&mdash;
+		// 				$${(breaks[i][1]).toFixed()}</label>
+		// 			</div.`);
+		// 	}
+		// }
+
+
+		// function addUi(dataLayer) {
+		// 	// create the slider control
+		// 	var selectControl = L.control({
+		// 		position: "topright"
+		// 	});
+
+		// 	// when control is added
+		// 	selectControl.onAdd = function () {
+		// 		// get the element with id attribute of ui-controls
+		// 		return L.DomUtil.get("dropdown-ui");
+		// 	};
+
+		// 	// add the control to the map
+		// 	selectControl.addTo(map);
+
+		// 	$('#dropdown-ui select').change(function () {
+		// 		// code executed here when change event occurs
+		//  		attributeValue = this.value;
+		//  		//console.log(attributeValue)
+
+		//  		updateMap(dataLayer);
+		//  	});
+
+		//  }
+		
+		
+		
+		
+	
+	</script>
+
+</body>
+
+</html>
