@@ -242,7 +242,7 @@
 			//center: [40, -90],
 			//zoom: 4
 			zoomControl: false,
-			layers: [cardo, world_imagery, wmsLayer]
+			layers: [wmsLayer,cardo, world_imagery]
 		}
 
 
@@ -255,9 +255,10 @@
 		}).addTo(map);
 
 		var baseMaps = {
+			"Hillshade": wmsLayer,
 			"Satellite": world_imagery,
 			"Basic": cardo,
-			"Hillshade": wmsLayer,
+			
 
 		};
 
