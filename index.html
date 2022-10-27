@@ -211,6 +211,13 @@
 			'http://ows.mundialis.de/services/service?', {
 				layers: 'TOPO-WMS'
 			});
+
+		var OpenStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				maxZoom: 19,
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+			});
+		
+
 		
 		var crop = L.tileLayer.wms('https://nassgeodata.gmu.edu/CropScapeService/wms_cdl_wa.cgi', {
 			layers: 'cdl_2021_wa'
@@ -248,7 +255,7 @@
 			//dragging: false,
 			minZoom: 7.5,
 			maxBounds: maxBoundsArea,
-			layers: [wmsLayer,cardo, world_imagery]
+			layers: [wmsLayer,cardo, world_imagery, OpenStreetMap]
 		}
 
 
@@ -264,7 +271,7 @@
 			"Hillshade": wmsLayer,
 			"Satellite": world_imagery,
 			"Basic": cardo,
-			
+			"OSM": OpenStreetMap
 
 		};
 
