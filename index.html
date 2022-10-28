@@ -200,12 +200,12 @@
 				subdomains: 'abcd',
 				maxZoom: 20
 			});
-		// var world_imagery = L.tileLayer(
-		// 	'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-		// 		attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-		// 		subdomains: 'abcd',
-		// 		maxZoom: 16
-		// 	});
+		var world_imagery = L.tileLayer(
+			'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+				attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+				subdomains: 'abcd',
+				maxZoom: 16
+			});
 
 		var us_imagery = L.tileLayer('https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}', {
 				maxZoom: 20,
@@ -274,9 +274,9 @@
 
 		var baseMaps = {
 			"Hillshade": wmsLayer,
-			//"Satellite": world_imagery,
+			"Imagery": world_imagery,
 			"OSM": OpenStreetMap,
-			"Imagery": us_imagery,
+			//"Imagery": us_imagery,
 			"Basic": cardo,
 			
 		};
@@ -380,10 +380,10 @@
 		L.control.layers(baseMaps, overlays, {
 			position: 'bottomright',
 			collapsed: false,
-			sortLayers: us_imagery,
+			sortLayers: world_imagery,
 			cardo,
-			sortFunction: function (cardo, us_imagery, OpenStreetMap, wmsLayer) {
-				return [cardo, us_imagery, OpenStreetMap, wmsLayer].sort();
+			sortFunction: function (cardo, world_imagery, OpenStreetMap, wmsLayer) {
+				return [cardo, world_imagery, OpenStreetMap, wmsLayer].sort();
 			}
 		}).addTo(map);
 
