@@ -171,9 +171,9 @@
 	
 	<section id="about">
 		<h2>About this</h2>
-		<p>This map features rail-served properties in the state of Washington. A rail-served property has a rail line extending on to it; providing access to ship anywhere on the North American rail network. It is similar to a house having a driveway to access the nation's highway system.</p>
+		<p>This map features rail-served properties in the state of Washington. A rail-served property has a rail line extending on to it; connecting it to the North American Rail network extending across the U.S., Canada, and Mexico.</p>
 		<p>Select a property type from the dropdown menu and click on the icons for more info.</p>
-		<p>Map authored by, Alex Schulz</p>
+		<iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/2QLEN3RVunMas7j0PHjeAT?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
 	</section>
 
 		<!-- legend is outside of container-fluid and will be dynamically added to map -->
@@ -205,11 +205,10 @@
 				<!-- <option value="WHOLESALE TRADE">WHOLESALE TRADE</option>
 				<option value="BUSINESS SERVICES">BUSINESS SERVICES</option> -->
 				
-				
-				
-	
 			</select>
 		</div>
+
+		<div id="embed-iframe"></div>
 
 	<!-- jQuery first and the minified version from jQuery site, not the slim minified version from Bootstrap's site. -->
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js"
@@ -229,10 +228,13 @@
 	<script src="https://unpkg.com/esri-leaflet@3.0.8/dist/esri-leaflet.js"
     integrity="sha512-E0DKVahIg0p1UHR2Kf9NX7x7TUewJb30mxkxEm2qOYTVJObgsAGpEol9F6iK6oefCbkJiA4/i6fnTHzM6H1kEA=="
     crossorigin=""></script>
-	
+	<!-- then spotify -->
+	<script src="https://open.spotify.com/track/2QLEN3RVunMas7j0PHjeAT?si=70017c351d404e5c" async></script>
 	<script>
 		
-
+		
+		
+		
 		// request a basemap tile layer and add to the map
 		var cardo = L.tileLayer(
 			'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
