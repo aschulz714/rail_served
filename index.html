@@ -123,6 +123,41 @@
 				display: none;
 			}
 		}
+		#legend {
+			padding: 6px 8px;
+			font: 14px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255, 255, 255, 0.8);
+			/*box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);*/
+			/*border-radius: 5px;*/
+			line-height: 24px;
+			color: #555;
+			}
+		#legend h4 {
+			text-align: left;
+			font-size: 16px;
+			margin: 2px 12px 8px;
+			color: white;
+			}
+
+		#legend span {
+			position: relative;
+			bottom: 3px;
+			}
+
+		#legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin: 0 8px 0 0;
+			opacity: 0.7;
+			}
+
+		#legend i.icon {
+			background-size: 18px;
+			background-color: rgba(255, 255, 255, 1);
+			}
+
 	</style>
 </head>
 
@@ -141,32 +176,36 @@
 	</section>
 
 		<!-- legend is outside of container-fluid and will be dynamically added to map -->
-		<div class="bg-secondary py-3 px-4 ml-4 mt-4 text-white" id="legend">Legend</div>
+		<div class="bg-secondary py-3 px-4 ml-4 mt-4 text-white" id="legend"></div>
 
 		<!-- ui is outside of container-fluid and will be dynamically added to map -->
 		<div class="form-group mr-3 mt-3" id="dropdown-ui">
 			<select class="form-control bg-secondary text-white">
 				<option value="ALL PROPERTIES" selected>ALL PROPERTIES</option>
+				<option value="AGRICULTURE RELATED ACTIVITIES">AGRICULTURE RELATED ACTIVITIES</option>
+				<option value="INDUSTRIAL">INDUSTRIAL</option>
 				<option value="FOOD AND KINDRED PRODUCTS">FOOD AND KINDRED PRODUCTS</option>
+				<option value="PETROLEUM & RELATED INDUSTRIES">PETROLEUM & RELATED INDUSTRIES</option>
 				<option value="LUMBER AND WOOD PRODUCTS">LUMBER AND WOOD PRODUCTS</option>
-				<option value="PAPER AND ALLIED PRODUCTS">PAPER AND ALLIED PRODUCTS</option>
+				<!-- <option value="PAPER AND ALLIED PRODUCTS">PAPER AND ALLIED PRODUCTS</option> -->
 				<option value="CHEMICALS">CHEMICALS</option>
-				<option value="PETROLEUM REFINING AND RELATED INDUSTRIES">PETROLEUM REFINING AND RELATED INDUSTRIES</option>
-				<option value="RUBBER AND MISC PLASTIC PRODUCTS">RUBBER AND MISC PLASTIC PRODUCTS</option>
+				<!-- <option value="RUBBER AND MISC PLASTIC PRODUCTS">RUBBER AND MISC PLASTIC PRODUCTS</option> -->
 				<option value="STONE, CLAY AND GLASS PRODUCTS">STONE, CLAY AND GLASS PRODUCTS</option>
-				<option value="PRIMARY METAL INDUSTRIES">PRIMARY METAL INDUSTRIES</option>
-				<option value="FABRICATED METAL PRODUCTS">FABRICATED METAL PRODUCTS</option>
-				<option value="MISCELLANEOUS MANUFACTURING">MISCELLANEOUS MANUFACTURING</option>
+				<option value="METALS & RELATED INDUSTRIES">METALS & RELATED INDUSTRIES</option>
+				<!-- <option value="FABRICATED METAL PRODUCTS">FABRICATED METAL PRODUCTS</option> -->
+				<option value="WASTE DISPOSAL">WASTE DISPOSAL</option>
+				<option value="UNDEVELOPED LAND">UNDEVELOPED LAND</option>
+				<option value="MARINE TERMINALS">MARINE TERMINALS</option>
 				<option value="MOTOR VEHICLE TRANSPORTATION">MOTOR VEHICLE TRANSPORTATION</option>
 				<option value="AIRCRAFT MANUFACTURING">AIRCRAFT MANUFACTURING</option>
-				<option value="MARINE TERMINALS">MARINE TERMINALS</option>
-				<option value="UTILITIES">UTILITIES</option>
-				<option value="WASTE DISPOSAL">WASTE DISPOSAL</option>
-				<option value="WHOLESALE TRADE">WHOLESALE TRADE</option>
-				<option value="BUSINESS SERVICES">BUSINESS SERVICES</option>
 				<option value="GOVERNMENTAL SERVICES">GOVERNMENTAL SERVICES</option>
-				<option value="AGRICULTURE RELATED ACTIVITIES">AGRICULTURE RELATED ACTIVITIES</option>
-				<option value="UNDEVELOPED LAND">UNDEVELOPED LAND</option>
+				<option value="UTILITIES">UTILITIES</option>
+				
+				<!-- <option value="WHOLESALE TRADE">WHOLESALE TRADE</option>
+				<option value="BUSINESS SERVICES">BUSINESS SERVICES</option> -->
+				
+				
+				
 	
 			</select>
 		</div>
@@ -354,19 +393,20 @@
 			railLayer.addData(data).addTo(map);
 		});
 
-		railLayer.on('mouseover',function(e){
-			e.target.setStyle({
-			color:'yellow'
-		});
-		});
+		// railLayer.on('mouseover',function(e){
+		// 	console.log(e.target.layer)
+		// 	e.target.setStyle({
+		// 	color:'yellow'
+		// });
+		// });
 
-		railLayer.on('mouseout',function(e){
-			e.target.resetStyle()
-		});
+		// railLayer.on('mouseout',function(e){
+		// 	e.target.resetStyle()
+		// });
 
 
 
-		var data = $.getJSON("Data/rail_serve_final.geojson", function (data) {
+		var data = $.getJSON("Data/rail_serve_cons.geojson", function (data) {
 			// jQuery method uses AJAX request for the GeoJSON data
 			//console.log(data.feature.properties["ICON"])
 			drawMap(data);
@@ -435,7 +475,7 @@
 			},
 		});
 
-		$.getJSON("Data/rail_serve_final.geojson", function (data) {
+		$.getJSON("Data/rail_serve_cons.geojson", function (data) {
 				rail_data.addData(data)
 		});
 	  
@@ -513,7 +553,7 @@
 						},
 		 		});
 
-				$.getJSON("Data/rail_serve_final.geojson", function(data) {
+				$.getJSON("Data/rail_serve_cons.geojson", function(data) {
 					rail_data.addData(data)
 				});
 		
@@ -653,20 +693,37 @@
 		}
 
 		
-			// const legendControl = L.control({
-			// 	position: 'topright'
-			// });
+			 const legendControl = L.control({
+			 	position: 'topright'
+			 });
 
-			// legendControl.onAdd = function () {
-			// 	const legend = L.DomUtil.get('legend');
+			legendControl.onAdd = function () {
+			 	const legend = L.DomUtil.get('legend');
+				
+				legend.innerHTML += "<h4>Legend</h4>";
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/tractor.png);background-repeat: no-repeat;"></i><span>Agriculture</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/factory.png);background-repeat: no-repeat;"></i><span>Industrial</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/food.png);background-repeat: no-repeat;"></i><span>Food & Kindred Products</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/oil.png);background-repeat: no-repeat;"></i><span>Petroleum & Related</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/lumber.png);background-repeat: no-repeat;"></i><span>Lumber & Wood Products</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/chemicals.png);background-repeat: no-repeat;"></i><span>Chemicals</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/rock.png);background-repeat: no-repeat;"></i><span>Stone, Clay And Glass</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/metal.png);background-repeat: no-repeat;"></i><span>Metals</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/waste.png);background-repeat: no-repeat;"></i><span>Waste Disposal</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/undevelop.png);background-repeat: no-repeat;"></i><span>Undeveloped Land</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/port.png);background-repeat: no-repeat;"></i><span>Marine Terminals</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/auto.png);background-repeat: no-repeat;"></i><span>Motor Vehicles</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/plane.png);background-repeat: no-repeat;"></i><span>Aircraft</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/gov.png);background-repeat: no-repeat;"></i><span>Government</span><br>';
+				legend.innerHTML += '<i class="icon" style="background-image: url(graphics/electric.png);background-repeat: no-repeat;"></i><span>Utilities</span><br>';
 
-			// 	L.DomEvent.disableScrollPropagation(legend);
-			// 	L.DomEvent.disableScrollPropagation(legend);
+			 	L.DomEvent.disableScrollPropagation(legend);
+				L.DomEvent.disableScrollPropagation(legend);
 
-			// 	return legend;
-			// };
+			 	return legend;
+			 };
 
-			// legendControl.addTo(map);
+			 legendControl.addTo(map);
 
 
 		
