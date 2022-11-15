@@ -159,6 +159,10 @@
 			background-size: 18px;
 			background-color: rgba(255, 255, 255, 1);
 			}
+		/* .popImg {
+			max-width: 20%;
+			max-height: 20%
+		} */
 
 	</style>
 </head>
@@ -285,7 +289,7 @@
 		//});
 
 		var southwest = L.latLng(44.492936,-126.902809);
-		var northeast = L.latLng(49.731316,-113.396868);
+		var northeast = L.latLng(50.864219,-113.396868);
 
 		var maxBoundsArea = L.latLngBounds(southwest,northeast);
 		
@@ -429,6 +433,10 @@
 			// jQuery method uses AJAX request for the GeoJSON data
 			//console.log(data.feature.properties["ICON"])
 			drawMap(data);
+		});
+
+		var spot = $.getJSON("Data/fav_spot.geojson", function (spot) {
+			drawFav(spot);
 		});
 
 
@@ -645,6 +653,36 @@
 			
 		}
 
+		function drawFav(spot) {
+			const favLayer = L.geoJSON(spot, {
+				pointToLayer: function (feature, latlng) {
+					var newIcon = L.icon({
+						iconUrl: "graphics/star.png",
+						iconSize: [15,15]
+					})
+				
+					//console.log(feature.properties["USEDESC"]);
+					return L.marker(latlng, {icon:newIcon})
+				},
+
+			
+		}).addTo(map);
+
+			addPic(favLayer)
+		}
+
+		function addPic(favLayer){
+
+			imgUrl = "graphics/mypic.jpg"
+			popContent = "<img src='" + imgUrl + "'" + "class=popImg" + "'/>"
+
+			favLayer.bindPopup(popContent, {
+				maxWidth: "auto",
+				maxHeight: 400,
+				keepInView: true
+			})
+		}
+
 
 		function drawMapThree(outline) {
 			const dataLayer = L.geoJSON(outline, {
@@ -660,13 +698,13 @@
 
 
 			map.on("zoomend", function() {
-				console.log(dataLayer)
+				//console.log(dataLayer)
 				var zoomlevel = map.getZoom();
 				if (zoomlevel > 10) {
 					if (map.hasLayer(dataLayer)) {
 						map.removeLayer(dataLayer);
 					} else {
-						console.log("outline layer not added");
+						//console.log("outline layer not added");
 					}
 				}
 				if (zoomlevel < 10) {
@@ -677,7 +715,7 @@
 					// 	map.addLayer(dataLayer);
 					// }
 				}
-				console.log("Current Zoom Level = " + zoomlevel);
+				//console.log("Current Zoom Level = " + zoomlevel);
 			});
 
 		}
