@@ -305,6 +305,8 @@
 		// create Leaflet map and apply options
 		const map = L.map('map', options);
 
+		
+
 		new L.control.zoom({
 			position: 'bottomright'
 		}).addTo(map);
@@ -356,8 +358,10 @@
 		var outline = $.getJSON("Data/wa_outline.geojson", function (outline) {
 			// jQuery method uses AJAX request for the GeoJSON data
 			drawMapThree(outline);
+			//L.geoJson(data).addTo(map)
 		});
 
+		
 		
 		//var rail = $.getJSON("Data/wa_rail.geojson", function (rail) {
 			// jQuery method uses AJAX request for the GeoJSON data
@@ -391,6 +395,22 @@
 		$.getJSON("Data/wa_rail2.geojson", function (data) {
 			railLayer.addData(data).addTo(map);
 		});
+
+		// map.on('zoomend', function() {
+		// 		var currentZoom = map.getZoom();
+
+		// 		if (currentZoom > 7){
+		// 			map.removeLayer(railLayer);
+		// 		}
+		// 		else {
+		// 			map.addLayer(railLayer)
+		// 		}
+		// 		// Recalc always with the original value
+		// 		console.log(currentZoom)
+		// 	});
+
+
+			
 
 		// railLayer.on('mouseover',function(e){
 		// 	console.log(e.target.layer)
@@ -628,9 +648,6 @@
 
 		function drawMapThree(outline) {
 			const dataLayer = L.geoJSON(outline, {
-				pointToLayer: function (feature, latlng) {
-					return L.marker(latlng)
-				},
 				style: function (feature) {
 					return {
 						color: 'black',
@@ -639,13 +656,36 @@
 					};
 				},
 
-				
-
 			}).addTo(map);
 
-			
-			
+
+			map.on("zoomend", function() {
+				console.log(dataLayer)
+				var zoomlevel = map.getZoom();
+				if (zoomlevel > 10) {
+					if (map.hasLayer(dataLayer)) {
+						map.removeLayer(dataLayer);
+					} else {
+						console.log("outline layer not added");
+					}
+				}
+				if (zoomlevel < 10) {
+					map.addLayer(dataLayer)
+					// if (map.hasLayer(dataLayer)) {
+					// 	console.log("layer already added");
+					// } else {
+					// 	map.addLayer(dataLayer);
+					// }
+				}
+				console.log("Current Zoom Level = " + zoomlevel);
+			});
+
 		}
+
+		
+		
+
+
 		function drawMapTwo(rail) {
 			const railLayer = L.geoJSON(rail, {
 				pointToLayer: function (feature, latlng) {
