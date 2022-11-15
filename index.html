@@ -148,8 +148,8 @@
 			}
 
 		#legend i {
-			width: 18px;
-			height: 18px;
+			width: 21px;
+			height: 21px;
 			float: left;
 			margin: 0 8px 0 0;
 			opacity: 0.7;
@@ -189,12 +189,9 @@
 				<option value="FOOD AND KINDRED PRODUCTS">FOOD AND KINDRED PRODUCTS</option>
 				<option value="PETROLEUM & RELATED INDUSTRIES">PETROLEUM & RELATED INDUSTRIES</option>
 				<option value="LUMBER AND WOOD PRODUCTS">LUMBER AND WOOD PRODUCTS</option>
-				<!-- <option value="PAPER AND ALLIED PRODUCTS">PAPER AND ALLIED PRODUCTS</option> -->
 				<option value="CHEMICALS">CHEMICALS</option>
-				<!-- <option value="RUBBER AND MISC PLASTIC PRODUCTS">RUBBER AND MISC PLASTIC PRODUCTS</option> -->
 				<option value="STONE, CLAY AND GLASS PRODUCTS">STONE, CLAY AND GLASS PRODUCTS</option>
 				<option value="METALS & RELATED INDUSTRIES">METALS & RELATED INDUSTRIES</option>
-				<!-- <option value="FABRICATED METAL PRODUCTS">FABRICATED METAL PRODUCTS</option> -->
 				<option value="WASTE DISPOSAL">WASTE DISPOSAL</option>
 				<option value="UNDEVELOPED LAND">UNDEVELOPED LAND</option>
 				<option value="MARINE TERMINALS">MARINE TERMINALS</option>
@@ -202,10 +199,7 @@
 				<option value="AIRCRAFT MANUFACTURING">AIRCRAFT MANUFACTURING</option>
 				<option value="GOVERNMENTAL SERVICES">GOVERNMENTAL SERVICES</option>
 				<option value="UTILITIES">UTILITIES</option>
-				
-				<!-- <option value="WHOLESALE TRADE">WHOLESALE TRADE</option>
-				<option value="BUSINESS SERVICES">BUSINESS SERVICES</option> -->
-				
+					
 			</select>
 		</div>
 
@@ -364,6 +358,7 @@
 			drawMapThree(outline);
 		});
 
+		
 		//var rail = $.getJSON("Data/wa_rail.geojson", function (rail) {
 			// jQuery method uses AJAX request for the GeoJSON data
 			//drawMapTwo(rail);
@@ -383,9 +378,9 @@
 				},
 
 			onEachFeature: function (feature, layer) {
-				const props = feature.properties["RROWNER1"];
+				const props = feature.properties["OWNER"];
 
-				let popupInfo = `<b>Rail Owner: ${props}</b><br>`;
+				let popupInfo = `<b>Rail Owner</b>: ${props}<br>`;
 						
 				layer.bindPopup(popupInfo, {
 					sticky: true
@@ -393,7 +388,7 @@
 			}
 		});
 
-		$.getJSON("Data/wa_rail.geojson", function (data) {
+		$.getJSON("Data/wa_rail2.geojson", function (data) {
 			railLayer.addData(data).addTo(map);
 		});
 
@@ -644,8 +639,12 @@
 					};
 				},
 
+				
+
 			}).addTo(map);
 
+			
+			
 		}
 		function drawMapTwo(rail) {
 			const railLayer = L.geoJSON(rail, {
@@ -729,59 +728,11 @@
 
 			 legendControl.addTo(map);
 
-
-		
-
-
-
-		// function updateLegend(attributeValue) {
-		// 	console.log(attributeValue)
-		// 	const legend = $('#legend').html(`<h5>${labels[attributeValue]}</h5>`);
 			
 
-		// 	for (let i = 0; i <= breaks.length - 1; i++) {
-
-		// 		let color = getColor(breaks[i][0], breaks);
-
-		// 		legend.append(
-		// 			`<span style="background:${color}"></span>
-		// 			<div>
-		// 				<label>$${(breaks[i][0]).toFixed(1)}&mdash;
-		// 				$${(breaks[i][1]).toFixed()}</label>
-		// 			</div.`);
-		// 	}
-		// }
-
-
-		// function addUi(dataLayer) {
-		// 	// create the slider control
-		// 	var selectControl = L.control({
-		// 		position: "topright"
-		// 	});
-
-		// 	// when control is added
-		// 	selectControl.onAdd = function () {
-		// 		// get the element with id attribute of ui-controls
-		// 		return L.DomUtil.get("dropdown-ui");
-		// 	};
-
-		// 	// add the control to the map
-		// 	selectControl.addTo(map);
-
-		// 	$('#dropdown-ui select').change(function () {
-		// 		// code executed here when change event occurs
-		//  		attributeValue = this.value;
-		//  		//console.log(attributeValue)
-
-		//  		updateMap(dataLayer);
-		//  	});
-
-		//  }
-		
-		
-		
-		
-	
+			
+ 
+			 
 	</script>
 
 </body>
